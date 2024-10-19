@@ -4,7 +4,7 @@
   "description": "loan-app-bakend",
   "main": "index.js",
   "scripts": {
-    "npm start": "node backend/server.js"
+    "npm start": "node server.js"
   },
   "author": "Mahendra Singh",
   "license": "ISC",
