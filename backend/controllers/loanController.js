@@ -1,11 +1,12 @@
 const asyncHandler = require("express-async-handler");
-const Loan  = require("../model/loanModel");
+const Loan = require("../model/loanModel");
 const User = require("../model/UserModel");
 
+// Function to create a new loan
 const createLoan = asyncHandler(async (req, res) => {
   const { loan_amt, time } = req.body;
 
-
+  // Validate loan amount and time
   if (loan_amt <= 0) {
     res.status(400);
     throw new Error("Please add a valid loan amount");
@@ -18,51 +19,49 @@ const createLoan = asyncHandler(async (req, res) => {
   const userId = req.params.id;
   const userDetails = await User.findById(userId);
 
+  // Check if user exists and if they already have a loan
   if (!userDetails) {
     res.status(404);
     throw new Error("User not found");
   }
 
- 
-  if (userDetails.loanTaken === true) {
-    res.status(400).json({userDetails});
+  if (userDetails.loanTaken) {
+    res.status(400).json({ userDetails });
     throw new Error("You already have an existing loan");
   }
 
   const Amt_pay_weekly = loan_amt / time;
 
+  // Create payment chart
   const Amt_chart = [];
   for (let week = 1; week <= time; week++) {
-    
     const dueDate = new Date();
-    dueDate.setDate(dueDate.getDate() + (7 * week));
+    dueDate.setDate(dueDate.getDate() + 7 * week);
 
-    
     Amt_chart.push({
       Amt_recived: Amt_pay_weekly,
-      Status: "not approved", 
-      Due_date: dueDate
+      Status: "not approved",
+      Due_date: dueDate,
     });
   }
 
-  
+  // Create the loan
   const LoanAssign = await Loan.create({
     UserId: userDetails._id,
     loan_amt,
-    PayedAmt: 0, 
-    Amt_chart, 
+    PayedAmt: 0,
+    Amt_chart,
   });
 
-  
+  // Update user details (commented out for debugging purposes)
   // userDetails.loanTaken = true;
   // userDetails.loanId = LoanAssign._id;
   // await userDetails.save();
 
-
   if (LoanAssign) {
     res.status(201).json({
       _id: LoanAssign._id,
-      userDeatils: LoanAssign.UserId,
+      userDetails: LoanAssign.UserId,
       loan_amt: LoanAssign.loan_amt,
       Amt_chart: LoanAssign.Amt_chart,
     });
@@ -72,19 +71,21 @@ const createLoan = asyncHandler(async (req, res) => {
   }
 });
 
-
-// updatin the amt chart  when payment is recived 
+// Function to update loan payment status
 const UpdateLoan = asyncHandler(async (req, res) => {
   const userId = req.params.id;
-  const { payment } = req.body;
+  const { payment } = req.body; // Ensure 'payment' is being passed correctly
 
+  // Fetch user details
   const userDetails = await User.findById(userId);
 
+  // Check if user has a loan
   if (!userDetails || !userDetails.loanTaken) {
     res.status(400);
     throw new Error("No loan exists for this user");
   }
 
+  // Fetch loan details
   const LoanAssign = await Loan.findById(userDetails.loanId);
 
   if (!LoanAssign) {
@@ -93,25 +94,55 @@ const UpdateLoan = asyncHandler(async (req, res) => {
   }
 
   let paymentApplied = false;
+
+  // Iterate through the payment chart
   for (let i = 0; i < LoanAssign.Amt_chart.length; i++) {
     if (LoanAssign.Amt_chart[i].Status === "not approved") {
+      const receivedAmount = Number(LoanAssign.Amt_chart[i].Amt_recived);
       
-        LoanAssign.Amt_chart[i].Status = "approved";
-        LoanAssign.PayedAmt += LoanAssign.Amt_chart[i].Amt_recived;
-        paymentApplied = true;
-        break; 
-     
+      // Ensure the received amount is valid
+      if (isNaN(receivedAmount) || receivedAmount <= 0) {
+        res.status(400);
+        throw new Error("Received amount is invalid");
+      }
+
+      // Prevent adding to Infinity
+      if (LoanAssign.PayedAmt === Infinity || receivedAmount === Infinity) {
+        res.status(400);
+        throw new Error("Invalid operation leading to Infinity");
+      }
+
+      // Update PayedAmt safely
+      LoanAssign.PayedAmt += receivedAmount;
+      LoanAssign.Amt_chart[i].Status = "approved";
+      paymentApplied = true;
+      break; 
     }
   }
 
+  // Check if any payment was applied
   if (!paymentApplied) {
-    res.status(400);
+    const allPaymentsReceived = LoanAssign.Amt_chart.every(
+      (amt) => amt.Status === "approved"
+    );
+
+    if (allPaymentsReceived) {
+      userDetails.loanTaken = false;
+      userDetails.loanId = null;
+      await userDetails.save();
     
+      await LoanAssign.remove();
+      return res.status(200).json({ message: "Your loan is completed" });
+    }
+
+    res.status(400);
     throw new Error("All payments have already been received or the payment was too low.");
   }
 
+  // Save updated loan details
   await LoanAssign.save();
 
+  // Respond with updated loan details
   res.status(200).json({
     _id: LoanAssign._id,
     loan_amt: LoanAssign.loan_amt,
@@ -120,13 +151,13 @@ const UpdateLoan = asyncHandler(async (req, res) => {
   });
 });
 
-
-// delete the loan if the if all payemrnt have been  recived 
+// Function to delete loan if all payments have been received
 const DeleteLoan = asyncHandler(async (req, res) => {
   const userId = req.params.id;
 
   const userDetails = await User.findById(userId);
 
+  // Check if user has an active loan
   if (!userDetails || !userDetails.loanTaken) {
     res.status(400);
     throw new Error("No active loan found for this user");
@@ -148,6 +179,7 @@ const DeleteLoan = asyncHandler(async (req, res) => {
     throw new Error("Loan cannot be deleted until all payments are received");
   }
 
+  // Update user status and remove loan
   userDetails.loanTaken = false;
   userDetails.loanId = null;
   await userDetails.save();
@@ -157,15 +189,15 @@ const DeleteLoan = asyncHandler(async (req, res) => {
   res.status(200).json({ message: "Loan deleted and user status updated successfully" });
 });
 
+// Function to get all loan details
 const getDetails = asyncHandler(async (req, res) => {
-  console.log("request comes to this get Details page00");
+  console.log("Request comes to get Details");
   try {
-    // Find all loans where loanGiven is false and populate UserId with user details
     const loans = await Loan.find({ loanGiven: false }).populate("UserId", "name email");
 
     // If loans are found, return them
     console.log(loans);
-    if (loans) {
+    if (loans.length) {
       res.status(200).json(loans);
     } else {
       res.status(404);
@@ -176,6 +208,8 @@ const getDetails = asyncHandler(async (req, res) => {
     throw new Error("Failed to fetch loan details.");
   }
 });
+
+// Function to get loan details for a user
 const getDetailsUser = asyncHandler(async (req, res) => {
   console.log("Request received to get loan details");
   try {
@@ -194,7 +228,7 @@ const getDetailsUser = asyncHandler(async (req, res) => {
 
       if (user) {
         user.loanTaken = true;
-        user.loanId  = loan_id;
+        user.loanId = loan_id;
         await user.save();
 
         res.status(200).json({ loan, user });
@@ -209,6 +243,4 @@ const getDetailsUser = asyncHandler(async (req, res) => {
   }
 });
 
-
-
-module.exports = {createLoan , UpdateLoan , getDetails, getDetailsUser,DeleteLoan};
+module.exports = { createLoan, UpdateLoan, getDetails, getDetailsUser, DeleteLoan };

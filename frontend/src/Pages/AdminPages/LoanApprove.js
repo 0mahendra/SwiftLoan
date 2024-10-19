@@ -92,7 +92,7 @@ const  LoanApprove = ()=>{
       <h1 class="sm:text-4xl text-3xl font-medium title-font mb-2 text-white">Loan Approval Chart</h1>
     
     </div>
-    <div class="lg:w-2/3 w-full mx-auto overflow-auto">
+    <div class="lg:w-2/3 w-full mx-auto max-h-96 overflow-y-auto">
       <table class="table-auto w-full text-left whitespace-no-wrap">
         <thead>
           <tr>
