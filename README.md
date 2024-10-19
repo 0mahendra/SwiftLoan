@@ -10,3 +10,9 @@ app.use(cors({
 
 To start Frontend at localhost the add  
 at all api add backend address http://localhost:5000
+
+then for backend start  -> node backend/server.js
+then for frontend start ->  cd frontend then -> npm start
+
+                            
+
