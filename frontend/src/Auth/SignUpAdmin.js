@@ -66,13 +66,13 @@ const SignUpAdmin = () => {
           };
         
           const {data} = await axios.post(
-            "/api/admin/",
+            "https://swiftloan-1.onrender.com/api/admin/",
             {name,email,phNumber,sex,password ,pic, address},
              config
             ); 
              alert("successful");
-        localStorage.setItem("userId", data._id);  // Storing the user ID in localStorage
-        localStorage.setItem("token", data.token); // Storing the token in localStorage
+        localStorage.setItem("userId", data._id); 
+        localStorage.setItem("token", data.token); 
     
         
        

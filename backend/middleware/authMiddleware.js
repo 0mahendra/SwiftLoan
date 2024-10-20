@@ -15,7 +15,7 @@ const protect = asyncHandler(async (req, res, next) => {
 
       //decodes token id
       console.log(token);
-      console.log(process.env.JWT_SECRET || 'MahiSingh') ;
+      console.log(process.env.JWT_SECRET ) ;
       jwt.verify(token, 'MahiSingh', { algorithms: ['HS256'] }, (err, decoded) => {
         if (err) {
           return res.status(401).json({ message: 'Token verification failed' });

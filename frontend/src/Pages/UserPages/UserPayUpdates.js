@@ -29,21 +29,21 @@ const UserPayUpdates = ()=>{
          
          const config = {
            headers: {
-             "Content-Type": "application/json", // Correct header key should be "headers", not "header"
+             "Content-Type": "application/json", 
              Authorization: `Bearer ${token}`, 
            },
          };
      
          const {data: userData } = await axios.post(
-           `http://127.0.0.1:5000/api/user/get/${userId}`, 
-           {userId}, // Empty object as second argument because POST requests generally expect a body
+           `https://swiftloan-1.onrender.com/api/user/get/${userId}`, 
+           {userId},
            config
          );
          
          const loanId = userData.loanId;
          console.log(loanId);
 
-         const { data } = await axios.post(`http://127.0.0.1:5000/api/loan/getDetails/${loanId}`,{}, config);
+         const { data } = await axios.post(`https://swiftloan-1.onrender.com/api/loan/getDetails/${loanId}`,{}, config);
          console.log(data.loan.Amt_chart);
          setChart(data.loan.Amt_chart);
          

@@ -6,7 +6,7 @@ const User = require("../model/UserModel");
 const createLoan = asyncHandler(async (req, res) => {
   const { loan_amt, time } = req.body;
 
-  // Validate loan amount and time
+  
   if (loan_amt <= 0) {
     res.status(400);
     throw new Error("Please add a valid loan amount");
@@ -19,7 +19,7 @@ const createLoan = asyncHandler(async (req, res) => {
   const userId = req.params.id;
   const userDetails = await User.findById(userId);
 
-  // Check if user exists and if they already have a loan
+ 
   if (!userDetails) {
     res.status(404);
     throw new Error("User not found");
@@ -32,7 +32,7 @@ const createLoan = asyncHandler(async (req, res) => {
 
   const Amt_pay_weekly = loan_amt / time;
 
-  // Create payment chart
+ 
   const Amt_chart = [];
   for (let week = 1; week <= time; week++) {
     const dueDate = new Date();
@@ -53,10 +53,7 @@ const createLoan = asyncHandler(async (req, res) => {
     Amt_chart,
   });
 
-  // Update user details (commented out for debugging purposes)
-  // userDetails.loanTaken = true;
-  // userDetails.loanId = LoanAssign._id;
-  // await userDetails.save();
+
 
   if (LoanAssign) {
     res.status(201).json({
@@ -74,18 +71,16 @@ const createLoan = asyncHandler(async (req, res) => {
 // Function to update loan payment status
 const UpdateLoan = asyncHandler(async (req, res) => {
   const userId = req.params.id;
-  const { payment } = req.body; // Ensure 'payment' is being passed correctly
+  const { payment } = req.body; 
 
-  // Fetch user details
+ 
   const userDetails = await User.findById(userId);
 
-  // Check if user has a loan
   if (!userDetails || !userDetails.loanTaken) {
     res.status(400);
     throw new Error("No loan exists for this user");
   }
 
-  // Fetch loan details
   const LoanAssign = await Loan.findById(userDetails.loanId);
 
   if (!LoanAssign) {
@@ -95,24 +90,21 @@ const UpdateLoan = asyncHandler(async (req, res) => {
 
   let paymentApplied = false;
 
-  // Iterate through the payment chart
   for (let i = 0; i < LoanAssign.Amt_chart.length; i++) {
     if (LoanAssign.Amt_chart[i].Status === "not approved") {
       const receivedAmount = Number(LoanAssign.Amt_chart[i].Amt_recived);
       
-      // Ensure the received amount is valid
+ 
       if (isNaN(receivedAmount) || receivedAmount <= 0) {
         res.status(400);
         throw new Error("Received amount is invalid");
       }
 
-      // Prevent adding to Infinity
       if (LoanAssign.PayedAmt === Infinity || receivedAmount === Infinity) {
         res.status(400);
         throw new Error("Invalid operation leading to Infinity");
       }
 
-      // Update PayedAmt safely
       LoanAssign.PayedAmt += receivedAmount;
       LoanAssign.Amt_chart[i].Status = "approved";
       paymentApplied = true;
@@ -120,7 +112,6 @@ const UpdateLoan = asyncHandler(async (req, res) => {
     }
   }
 
-  // Check if any payment was applied
   if (!paymentApplied) {
     const allPaymentsReceived = LoanAssign.Amt_chart.every(
       (amt) => amt.Status === "approved"
@@ -139,10 +130,9 @@ const UpdateLoan = asyncHandler(async (req, res) => {
     throw new Error("All payments have already been received or the payment was too low.");
   }
 
-  // Save updated loan details
   await LoanAssign.save();
 
-  // Respond with updated loan details
+  
   res.status(200).json({
     _id: LoanAssign._id,
     loan_amt: LoanAssign.loan_amt,
@@ -157,7 +147,6 @@ const DeleteLoan = asyncHandler(async (req, res) => {
 
   const userDetails = await User.findById(userId);
 
-  // Check if user has an active loan
   if (!userDetails || !userDetails.loanTaken) {
     res.status(400);
     throw new Error("No active loan found for this user");
@@ -179,7 +168,6 @@ const DeleteLoan = asyncHandler(async (req, res) => {
     throw new Error("Loan cannot be deleted until all payments are received");
   }
 
-  // Update user status and remove loan
   userDetails.loanTaken = false;
   userDetails.loanId = null;
   await userDetails.save();
@@ -195,7 +183,6 @@ const getDetails = asyncHandler(async (req, res) => {
   try {
     const loans = await Loan.find({ loanGiven: false }).populate("UserId", "name email");
 
-    // If loans are found, return them
     console.log(loans);
     if (loans.length) {
       res.status(200).json(loans);
@@ -215,15 +202,13 @@ const getDetailsUser = asyncHandler(async (req, res) => {
   try {
     const loan_id = req.params.id;
 
-    // Find the loan by its ID
     const loan = await Loan.findById(loan_id);
 
     if (loan) {
-      // Update the loan's loanGiven field to true
+     
       loan.loanGiven = true;
       await loan.save();
 
-      // Find the user by the UserId referenced in the loan and update loanTaken to true
       const user = await User.findById(loan.UserId);
 
       if (user) {

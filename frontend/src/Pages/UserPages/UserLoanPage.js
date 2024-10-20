@@ -29,14 +29,14 @@ const UserLoanPage = () => {
        
        const config = {
          headers: {
-           "Content-Type": "application/json", // Correct header key should be "headers", not "header"
+           "Content-Type": "application/json",
            Authorization: `Bearer ${token}`, 
          },
        };
    
        const { data: userData } = await axios.post(
-         `http://127.0.0.1:5000/api/loan/${userId}`, 
-         {loan_amt,time}, // Empty object as second argument because POST requests generally expect a body
+         `https://swiftloan-1.onrender.com/api/loan/${userId}`, 
+         {loan_amt,time}, 
          config
        );
        

@@ -38,7 +38,7 @@ const[amt ,setAmt] = useState(0);
             }).then((res)=>res.json())
               .then((data)=>{
                 setPic(data.url.toString());
-                // console.log(data.url.toString());
+                
                
               })
               .catch((err)=>{
@@ -68,13 +68,13 @@ const[amt ,setAmt] = useState(0);
         try {
           const config = {
             headers: {
-              "Content-Type": "application/json", // Correct header key should be "headers", not "header"
+              "Content-Type": "application/json", 
                Authorization: `Bearer ${token}`,
             },
           };
       
           const { data } = await axios.post(
-            `http://127.0.0.1:5000/api/payment/${userId}`,
+            `https://swiftloan-1.onrender.com/api/payment/${userId}`,
             {refranceNumber, pic },config
           );
 
@@ -83,7 +83,7 @@ const[amt ,setAmt] = useState(0);
           
           alert(" submit successful");
                
-          history.push("/MainUserPage"); // Navigate to another page after success
+          history.push("/MainUserPage");
         } catch (error) {
           alert("Error occurred during registration");
           console.log(error);
@@ -96,7 +96,7 @@ const[amt ,setAmt] = useState(0);
   className="  h-screen w-screen"
   style={{
     backgroundImage: "url('https://c4.wallpaperflare.com/wallpaper/543/485/169/abstract-blue-wallpaper-preview.jpg')",
-    backgroundSize: "cover", // Ensures the background covers the entire div
+    backgroundSize: "cover",
   }}
 >
  <NavbarUser/>

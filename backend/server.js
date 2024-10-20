@@ -16,7 +16,7 @@ const app = express();
 app.use(express.json());
 app.use(cors({
      origin: 'https://loquacious-smakager-3cef37.netlify.app', // Frontend origin
-     credentials: true, // if you are using cookies or credentials
+     credentials: true,
    }));
 
 app.get("/", (req, res)=>{

@@ -35,7 +35,7 @@ const MainAdminPage = ()=>{
       </h1> 
      
       <div class="flex justify-center">
-      <button class="ml-4 inline-flex text-gray-400 bg-gray-800 border-0 py-2 px-6 focus:outline-none hover:bg-gray-700 hover:text-white rounded text-lg" onClick={LoanRequest}>Apply Loan</button>
+      <button class="ml-4 inline-flex text-gray-400 bg-gray-800 border-0 py-2 px-6 focus:outline-none hover:bg-gray-700 hover:text-white rounded text-lg" onClick={LoanRequest}>Check Loan</button>
         <button class="ml-4 inline-flex text-gray-400 bg-gray-800 border-0 py-2 px-6 focus:outline-none hover:bg-gray-700 hover:text-white rounded text-lg" onClick={PaymentUp}>Payment Updates</button>
       </div>
     </div>

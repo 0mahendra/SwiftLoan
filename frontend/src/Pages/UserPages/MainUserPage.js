@@ -25,14 +25,14 @@ const MainUserPage = ()=>{
           
           const config = {
             headers: {
-              "Content-Type": "application/json", // Correct header key should be "headers", not "header"
+              "Content-Type": "application/json", 
               Authorization: `Bearer ${token}`, 
             },
           };
       
           const { data: userData } = await axios.post(
-            `http://127.0.0.1:5000/api/user/get/${userId}`, 
-            {userId}, // Empty object as second argument because POST requests generally expect a body
+            `https://swiftloan-1.onrender.com/api/user/get/${userId}`, 
+            {userId}, 
             config
           );
           
@@ -64,14 +64,14 @@ const MainUserPage = ()=>{
        
        const config = {
          headers: {
-           "Content-Type": "application/json", // Correct header key should be "headers", not "header"
+           "Content-Type": "application/json", 
            Authorization: `Bearer ${token}`, 
          },
        };
    
        const {data: userData } = await axios.post(
-         `http://127.0.0.1:5000/api/user/get/${userId}`, 
-         {userId}, // Empty object as second argument because POST requests generally expect a body
+         `https://swiftloan-1.onrender.com/api/user/get/${userId}`, 
+         {userId},
          config
        );
        
@@ -96,7 +96,7 @@ const MainUserPage = ()=>{
   className="  h-screen w-screen"
   style={{
     backgroundImage: "url('https://c4.wallpaperflare.com/wallpaper/543/485/169/abstract-blue-wallpaper-preview.jpg')",
-    backgroundSize: "cover", // Ensures the background covers the entire div
+    backgroundSize: "cover",
   }}
 >
 

@@ -33,12 +33,6 @@ const registerUser = asyncHandler(async (req, res) => {
   });
 
   if (user) {
-    
-    // const payload = {
-    //   id: user._id,
-    // };
-    // const token = generateToken(payload);
-
     res.status(201).json({
       _id: user._id,
       name: user.name,
@@ -66,7 +60,7 @@ const authUser = asyncHandler(async (req, res) => {
     const payload = {
       id: user.id,
     };
-    // const token = generateToken(payload);
+  
 
   
     res.json({
@@ -87,17 +81,14 @@ const authUser = asyncHandler(async (req, res) => {
 const getUser = asyncHandler(async (req, res) => {
   console.log("Request comes to get user");
 
-  // Extract userId from request params or request body
   const userId = req.params.id || req.body.userId;
   console.log("userId:", userId);
 
-  // Check if userId is a valid MongoDB ObjectId
   if (!mongoose.Types.ObjectId.isValid(userId)) {
     res.status(400);
     throw new Error("Invalid User ID");
   }
 
-  // Find user by userId
   const user = await User.findById(userId);
   console.log(user);
 

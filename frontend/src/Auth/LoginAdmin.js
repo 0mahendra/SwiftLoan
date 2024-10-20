@@ -25,7 +25,7 @@ const LoginAdmin = () => {
           };
         
           const {data} = await axios.post(
-            "http://127.0.0.1:5000/api/admin/login",
+            "https://swiftloan-1.onrender.com/api/admin/login",
             {email,password },
              config
             ); 
@@ -53,7 +53,7 @@ const LoginAdmin = () => {
   className=" fixed h-screen w-screen"
   style={{
     backgroundImage: "url('https://c4.wallpaperflare.com/wallpaper/543/485/169/abstract-blue-wallpaper-preview.jpg')",
-    backgroundSize: "cover", // Ensures the background covers the entire div
+    backgroundSize: "cover", 
   }}
   >
       <section className="h-screen">

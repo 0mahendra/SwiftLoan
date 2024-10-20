@@ -29,11 +29,6 @@ const registerAdmin = asyncHandler(async (req, res) => {
     address,
   });
 
-  // const payload = {
-  //   id: admin._id,
-  // };
-
-  // const token = generateToken(payload);
 
   if (admin) {
     res.status(201).json({
@@ -57,7 +52,7 @@ const authAdmin = asyncHandler(async (req, res) => {
   console.log("request  comes to admin auth ")
   const { email, password } = req.body;
   console.log(email, password);
-  // let id  = "6713550ef9938646c41d2347";
+  
 
   const admin = await Admin.findOne({ email });
   console.log(admin);

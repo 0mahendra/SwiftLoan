@@ -69,22 +69,22 @@ const SignUpUser = () => {
         };
     
         const { data } = await axios.post(
-          "http://127.0.0.1:5000/api/user",
+          "https://swiftloan-1.onrender.com/api/user",
           { name, email, phNumber, sex, password, pic, address },
           config
         );
 
         
         alert("Registration successful");
-        // localStorage.setItem("userInfo", JSON.stringify(data));
+       
         
-        localStorage.setItem("userId", data._id);  // Storing the user ID in localStorage
-        localStorage.setItem("token", data.token); // Storing the token in localStorage
+        localStorage.setItem("userId", data._id);  
+        localStorage.setItem("token", data.token); 
     
       
 
         
-        history.push("/MainUserPage"); // Navigate to another page after success
+        history.push("/MainUserPage"); 
       } catch (error) {
         alert("Error occurred during registration");
         console.log(error);
@@ -120,7 +120,7 @@ const SignUpUser = () => {
                 <input
                   type="text"
                   name="name"
-                //   value={formData.name}
+              
                 onChange={(e)=>setName(e.target.value)}
                   className="peer block w-full rounded border-0 px-3 py-[0.32rem] leading-[2.15] outline-none focus:placeholder:opacity-100"
                   placeholder="Name"

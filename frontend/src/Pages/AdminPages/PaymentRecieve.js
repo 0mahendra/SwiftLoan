@@ -27,7 +27,7 @@ const PayementReceive = () => {
         },
       };
 
-      const { data } = await axios.get("http://127.0.0.1:5000/api/payment/getDetails", config);
+      const { data } = await axios.get("https://swiftloan-1.onrender.com/api/payment/getDetails", config);
       setPaymentData(data.payments);
     } catch (error) {
       console.error("Error fetching details:", error);
@@ -48,9 +48,9 @@ const PayementReceive = () => {
         },
       };
 
-      const { data: userData } = await axios.post(`http://127.0.0.1:5000/api/user/get/${userId}`, { userId }, config);
+      const { data: userData } = await axios.post(`https://swiftloan-1.onrender.com/api/user/get/${userId}`, { userId }, config);
       setUserData(userData);
-      setIsUserModalOpen(true); // Open user modal after fetching user data
+      setIsUserModalOpen(true);
     } catch (error) {
       alert("Error Occurred");
       console.log(error);
@@ -64,7 +64,7 @@ const PayementReceive = () => {
 
   const handleImageClick = (pic) => {
     setImageUrl(pic);
-    setIsImageModalOpen(true); // Open image modal
+    setIsImageModalOpen(true);
   };
 
   const closeImageModal = () => {
@@ -86,7 +86,7 @@ const PayementReceive = () => {
         },
       };
 
-      const { data } = await axios.put(`http://127.0.0.1:5000/api/loan/updateLoan/${userId}`, {}, config);
+      const { data } = await axios.put(`https://swiftloan-1.onrender.com/api/loan/updateLoan/${userId}`, {}, config);
 
       if (data) {
         alert("Update successful.");
@@ -111,7 +111,7 @@ const PayementReceive = () => {
         },
       };
 
-      const { data } = await axios.delete(`http://127.0.0.1:5000/api/payment/deletePayment/${refranceNumber}`, config);
+      const { data } = await axios.delete(`https://swiftloan-1.onrender.com/api/payment/deletePayment/${refranceNumber}`, config);
 
       if (data) {
         alert("Deletion successful.");
@@ -210,7 +210,7 @@ const PayementReceive = () => {
           </div>
         </section>
 
-        {/* User Details Modal */}
+      
         {isUserModalOpen && (
           <div
             className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center"
@@ -222,7 +222,7 @@ const PayementReceive = () => {
                 <div>
                   <p className="mb-2"><strong>Name:</strong> {userData.name}</p>
                   <p className="mb-2"><strong>Email:</strong> {userData.email}</p>
-                  {/* Add more user details as needed */}
+                  
                 </div>
               ) : (
                 <p>Loading user details...</p>
@@ -237,7 +237,7 @@ const PayementReceive = () => {
           </div>
         )}
 
-        {/* Image Modal */}
+      
         {isImageModalOpen && (
           <div
             className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center"

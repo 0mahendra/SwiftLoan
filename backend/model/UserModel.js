@@ -27,7 +27,7 @@ const userSchema = mongoose.Schema(
       required: true,
       validate: {
         validator: function (v) {
-          return v.split(' ').length >= 3; // At least 5 words
+          return v.split(' ').length >= 3; 
         },
         message: props => `Address must be at least 3 words!`
       },

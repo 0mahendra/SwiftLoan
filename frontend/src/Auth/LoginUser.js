@@ -24,18 +24,17 @@ const LoginUser = () => {
         };
     
         const { data } = await axios.post(
-          "http://127.0.0.1:5000/api/user/login",
+          "https://swiftloan-1.onrender.com/api/user/login",
           { email, password },
           config
         );
     
-        // Assuming the backend response sends these correctly:
-        // `data._id` and `data.token`
+   
         alert("Login successful");
-        localStorage.setItem("userId", data._id);  // Storing the user ID in localStorage
-        localStorage.setItem("token", data.token); // Storing the token in localStorage
+        localStorage.setItem("userId", data._id); 
+        localStorage.setItem("token", data.token); 
     
-        // Redirect to main user page after successful login
+    
         history.push("/MainUserPage");
     
       } catch (error) {
