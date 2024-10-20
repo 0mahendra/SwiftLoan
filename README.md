@@ -14,5 +14,8 @@ at all api add backend address http://localhost:5000
 then for backend start  -> node backend/server.js
 then for frontend start ->  cd frontend then -> npm start
 
+
+want to login as a admin email -> mahendra0902001.com and password -> mahi
+
                             
 
