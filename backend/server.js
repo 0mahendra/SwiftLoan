@@ -15,7 +15,7 @@ const app = express();
 
 app.use(express.json());
 app.use(cors({
-     origin: 'https://swiftloanmahi.netlify.app/', // Frontend origin
+     origin: 'https://swiftloanmahi.netlify.app', // Frontend origin
      credentials: true,
    }));
 
